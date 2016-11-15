@@ -18,21 +18,21 @@ p array
 p element
 upper = size -1
 lower = 0
-
-def search(array, element, upper, lower)
+answer=[]
+def search(array, element, upper, lower, answer)
 	unless array[(upper+lower)/2]==element
-		p array[(upper+lower)/2]
 		if element > array[(upper+lower)/2]
 			lower = (upper+lower)/2
 		else
 			upper = (upper+lower)/2
 		end
-		search(array, element, upper, lower)
+		search(array, element, upper, lower,answer)
 	else
-		puts "element #{element} is the #{(upper+lower)/2+1} in the array"
+		answer<<((upper+lower)/2+1)
 	end
 end
-search(array, element, upper, lower)
+search(array, element, upper, lower,answer)
+puts "element #{element} is the #{answer[0]} in the array"
 
 ################################################################################################
 =begin
@@ -41,8 +41,7 @@ Search an element in a sorted and rotated array
 
 #rotate array randomly
 array = array.rotate((1..size).to_a.sample)
-p array
-
+#search for pivot index
 def find_pivot(array, upper, lower)
 	mid = (upper+lower)/2
 	unless array[mid]>array[mid+1]
@@ -55,6 +54,19 @@ def find_pivot(array, upper, lower)
 		return mid+1
 	end
 end
-p '#'
+p '############################'
 p array
-puts "the staring index is #{find_pivot(array,size-1,0)}"
+pivot=find_pivot(array,size-1,0)
+puts "the staring index is #{pivot}"
+
+
+#search fo the element
+
+answer, upper,lower=[],pivot,0
+search(array, element, upper, lower, answer)
+if answer.empty?
+	upper = size-1
+	lower=pivot
+	search(array, element, upper, lower, answer)
+end
+puts "element #{element} is the #{answer[0]} in the array"
