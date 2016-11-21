@@ -19,20 +19,28 @@ p element
 upper = size -1
 lower = 0
 answer=[]
-def search(array, element, upper, lower, answer)
-	unless array[(upper+lower)/2]==element
-		if element > array[(upper+lower)/2]
-			lower = (upper+lower)/2
+def search(array, element, upper, lower, answer, size)
+
+
+
+		mid=(upper+lower)/2
+
+	p mid
+	sleep 1
+	unless array[mid]==element
+		if element > array[mid]
+			lower = mid + 1
+			  
 		else
-			upper = (upper+lower)/2
+			upper = mid - 1
 		end
-		search(array, element, upper, lower,answer)
+		search(array, element, upper, lower,answer,size)
 	else
-		answer<<((upper+lower)/2+1)
+		answer<<mid
 	end
 end
-search(array, element, upper, lower,answer)
-puts "element #{element} is the #{answer[0]} in the array"
+search(array, element, upper, lower,answer,size)
+puts "element #{element} is the #{answer[0]+1} in the array"
 
 ################################################################################################
 =begin
@@ -41,32 +49,64 @@ Search an element in a sorted and rotated array
 
 #rotate array randomly
 array = array.rotate((1..size).to_a.sample)
+p array
 #search for pivot index
-def find_pivot(array, upper, lower)
+def find_pivot(array, upper, lower, pivot)
 	mid = (upper+lower)/2
 	unless array[mid]>array[mid+1]
 		if array[mid]>array[upper]
-			find_pivot(array,upper,mid)
+			find_pivot(array,upper,mid+1,pivot)
 		else
-			find_pivot(array,mid,lower)
+			find_pivot(array,mid-1,lower,pivot)
 		end
 	else
-		return mid+1
+		pivot<<mid+1
 	end
 end
 p '############################'
 p array
-pivot=find_pivot(array,size-1,0)
-puts "the staring index is #{pivot}"
+pivot=[]
+find_pivot(array,size-1,0,pivot)
+puts "the staring index is #{pivot.first}"
 
 
-#search fo the element
+#search for the element
 
-answer, upper,lower=[],pivot,0
-search(array, element, upper, lower, answer)
-if answer.empty?
-	upper = size-1
-	lower=pivot
-	search(array, element, upper, lower, answer)
+def search2(array, element, upper, lower, answer, size)
+		if upper<lower
+			mid=(upper+lower+size)/2
+		else
+			mid = (upper+lower)/2
+		end
+	p mid
+	p "asd#{array[mid]}"
+	sleep 1
+	unless array[mid]==element
+		if element > array[mid]
+			lower = mid + 1
+			 if lower > (size-1)
+			 	lower-=size
+			 end
+		else
+			upper = mid - 1
+			if upper < 0 
+				upper+=size
+			end
+		end
+		search2(array, element, upper, lower,answer,size)
+	else
+		answer<<mid
+	end
 end
+
+
+answer, lower =[],pivot.first
+if lower = size-1
+	upper = 0
+else
+	upper = pivot.first-1
+end
+
+
+search2(array, element, upper, lower, answer,size)
 puts "element #{element} is the #{answer[0]} in the array"
